@@ -1,12 +1,22 @@
 const { log } = require("console");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
+const cors = require("cors");
 
 try {
     const httpServer = createServer();
     const io = new Server(httpServer, {
         cors: true,
     });
+
+    // Use the cors middleware to enable CORS
+    const corsOptions = {
+        origin: "https://peermeet.onrender.com",
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+        credentials: true,
+    };
+
+    io.use(cors(corsOptions));
 
     const nameToSocketIdMap = new Map();
     const socketIdToNameMap = new Map();
