@@ -1,8 +1,9 @@
 const cors = require("cors");
 const express = require("express");
 const { createServer } = require("http");
+const { Server } = require("socket.io");
 
-const app = express();  // Create the express app before passing it to createServer
+const app = express();
 
 try {
     const corsOptions = {
@@ -13,7 +14,7 @@ try {
 
     app.use(cors(corsOptions));
 
-    const httpServer = createServer(app);  // Pass the app to createServer
+    const httpServer = createServer(app);
     const io = new Server(httpServer);
 
     const nameToSocketIdMap = new Map();
