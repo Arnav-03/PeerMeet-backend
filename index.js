@@ -1,19 +1,19 @@
 const cors = require("cors");
 const express = require("express");
+const { createServer } = require("http");
 
-const app = express();
+const app = express();  // Create the express app before passing it to createServer
+
 try {
-   
-    
     const corsOptions = {
         origin: "https://peermeet.onrender.com",
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         credentials: true,
     };
-    
+
     app.use(cors(corsOptions));
-    
-    const httpServer = createServer(app);
+
+    const httpServer = createServer(app);  // Pass the app to createServer
     const io = new Server(httpServer);
 
     const nameToSocketIdMap = new Map();
