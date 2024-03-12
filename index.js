@@ -6,11 +6,11 @@ try {
     const httpServer = createServer();
     const io = new Server(httpServer, {
         cors: {
-            origin: "https://peermeet.onrender.com/", // https://peermeet.onrender.com/ http://localhost:5173
+            origin: "https://peermeet.onrender.com", // https://peermeet.onrender.com/ http://localhost:5173
             methods: ["GET", "POST"],
         },
     });//
-
+//fds
     const nameToSocketIdMap = new Map();
     const socketIdToNameMap = new Map();
 
