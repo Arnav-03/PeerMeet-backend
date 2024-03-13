@@ -40,7 +40,7 @@ try {
             socketIdToNameMap.set(socket.id, userName);
 
             // Emit events after joining the room
-            io.to(userRoomId).emit("user:joined", { username: userName, id: socket.id });
+            io.to(userRoomId).emit("user:joined", { username: userName, id: socket.id ,roomId: roomId});
             io.to(socket.id).emit("room:join", { username: userName, roomId });
         });
 
