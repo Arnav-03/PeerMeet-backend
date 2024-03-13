@@ -7,7 +7,7 @@ const app = express();
 
 // Use the cors middleware for Express directly
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "http://192.168.29.138:5173/",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
 }));
@@ -15,7 +15,7 @@ try {
     const httpServer = createServer(app);
     const io = new Server(httpServer, {
         cors: {
-            origin: "http://localhost:5173",
+            origin: "http://192.168.29.138:5173/",
             methods: ["GET", "POST"],
             credentials: true,
         },
