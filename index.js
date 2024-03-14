@@ -7,7 +7,7 @@ const app = express();
 
 // Use the cors middleware for Express directly
 app.use(cors({
-    origin: "https://peermeet.onrender.com",
+    origin: "http://localhost:5173",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
 }));
@@ -15,7 +15,7 @@ try {
     const httpServer = createServer(app);
     const io = new Server(httpServer, {
         cors: {
-            origin: "https://peermeet.onrender.com",
+            origin: "http://localhost:5173",
             methods: ["GET", "POST"],
             credentials: true,
         },
@@ -23,7 +23,6 @@ try {
 
     const nameToSocketIdMap = new Map();
     const socketIdToNameMap = new Map();
-    const rooms = new Map();
 
     io.on("connection", (socket) => {
         console.log("socket connected", socket.id);
@@ -36,26 +35,14 @@ try {
 
             // Corrected: Join the socket to the room before emitting events
             socket.join(userRoomId);
-                     // Get or initialize the room data
-                     let room = rooms.get(userRoomId);
-                     if (!room) {
-                         room = { host: null, joinnee: null };
-                         rooms.set(userRoomId, room);
-                     }
-         
-                     // Assign roles based on existing users in the room
-                     if (!room.host) {
-                         room.host = socket.id;
-                     } else if (!room.joinnee) {
-                         room.joinnee = socket.id;
-                     }
 
-              // Emit events after joining the room
-        io.to(userRoomId).emit("user:joined", { username: userName, id: socket.id, roomId: roomId });
-        io.to(socket.id).emit("room:join", { username: userName, roomId });
+            nameToSocketIdMap.set(userName, socket.id);
+            socketIdToNameMap.set(socket.id, userName);
 
-        console.log("Room Data:", room);
-    });
+            // Emit events after joining the room
+            io.to(userRoomId).emit("user:joined", { username: userName, id: socket.id ,roomId: roomId});
+            io.to(socket.id).emit("room:join", { username: userName, roomId });
+        });
 
         socket.on('user:call', ({ to, offer }) => {
             io.to(to).emit('incoming:call', { from: socket.id, offer });
@@ -73,6 +60,7 @@ try {
             io.to(to).emit('peer:nego:final', { from: socket.id, ans });
         });
     });
+    
 
     const PORT = 8000;
     httpServer.listen(PORT, () => {
