@@ -7,7 +7,7 @@ const app = express();
 
 // Use the cors middleware for Express directly
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "https://peermeet.onrender.com",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
 }));
@@ -15,7 +15,7 @@ try {
     const httpServer = createServer(app);
     const io = new Server(httpServer, {
         cors: {
-            origin: "http://localhost:5173",
+            origin: "https://peermeet.onrender.com",
             methods: ["GET", "POST"],
             credentials: true,
         },
@@ -60,7 +60,7 @@ try {
             io.to(to).emit('peer:nego:final', { from: socket.id, ans });
         });
     });
-    
+
 
     const PORT = 8000;
     httpServer.listen(PORT, () => {
