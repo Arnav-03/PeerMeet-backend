@@ -24,14 +24,21 @@ try {
     const nameToSocketIdMap = new Map();
     const socketIdToNameMap = new Map();
 
+
+
+
     io.on("connection", (socket) => {
         console.log("socket connected", socket.id);
+        // Function to send role information to a specific socket ID
+        const sendRoleToSocket = (userRoomId, role) => {
+            io.to(userRoomId).emit("role", { role: role });
+        };
 
-        socket.on("room:join", ({ user, roomId }) => {
-            console.log(`User ${user} joined room ${roomId}`);
+        socket.on("room:join", ({ user, roomId, role }) => {
+            console.log(`User ${user} joined room ${roomId} as ${role}`);
             const userName = user;
             const userRoomId = roomId;
-            console.log(userName);
+            const Role = role;
 
             // Corrected: Join the socket to the room before emitting events
             socket.join(userRoomId);
@@ -40,9 +47,19 @@ try {
             socketIdToNameMap.set(socket.id, userName);
 
             // Emit events after joining the room
-            io.to(userRoomId).emit("user:joined", { username: userName, id: socket.id ,roomId: roomId});
+            setTimeout(() => {
+                io.to(userRoomId).emit("user:joined", { username: userName, id: socket.id, Role: role });
+            }, 1000); 
+            
+
             io.to(socket.id).emit("room:join", { username: userName, roomId });
+            setTimeout(() => {
+                sendRoleToSocket(userRoomId, role);
+            }, 1000); 
+            
+            // Send role information to the joined socket
         });
+
 
         socket.on('user:call', ({ to, offer }) => {
             io.to(to).emit('incoming:call', { from: socket.id, offer });
@@ -60,7 +77,6 @@ try {
             io.to(to).emit('peer:nego:final', { from: socket.id, ans });
         });
     });
-
 
     const PORT = 8000;
     httpServer.listen(PORT, () => {
