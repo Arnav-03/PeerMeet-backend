@@ -60,7 +60,9 @@ try {
             // Send role information to the joined socket
         });
 
-
+        socket.on("logout", () => {
+            socket.broadcast.emit("user:logout", { userId: socket.id });
+        });
         socket.on('user:call', ({ to, offer }) => {
             io.to(to).emit('incoming:call', { from: socket.id, offer });
         });
