@@ -49,13 +49,13 @@ try {
             // Emit events after joining the room
             setTimeout(() => {
                 io.to(userRoomId).emit("user:joined", { username: userName, id: socket.id, Role: role });
-            }, 1000); 
+            }, 500); 
             
 
             io.to(socket.id).emit("room:join", { username: userName, roomId });
             setTimeout(() => {
                 sendRoleToSocket(userRoomId, role);
-            }, 1000); 
+            }, 500); 
             
             // Send role information to the joined socket
         });
